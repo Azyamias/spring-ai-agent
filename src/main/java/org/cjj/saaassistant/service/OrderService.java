@@ -1,0 +1,15 @@
+package org.cjj.saaassistant.service;
+
+import org.cjj.saaassistant.pojo.Order;
+
+public interface OrderService {
+
+    // 根据id查找订单
+    Order getOrderById(int id);
+
+    // 创建订单
+    boolean createOrder(Order order);
+
+    // 更新订单信息
+    boolean updateOrder(Order order);
+}
