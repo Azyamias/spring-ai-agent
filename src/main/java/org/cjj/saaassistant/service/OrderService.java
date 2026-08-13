@@ -2,6 +2,8 @@ package org.cjj.saaassistant.service;
 
 import org.cjj.saaassistant.pojo.Order;
 
+import java.util.List;
+
 public interface OrderService {
 
     // 根据id查找订单
@@ -12,4 +14,7 @@ public interface OrderService {
 
     // 更新订单信息
     boolean updateOrder(Order order);
+
+    // 根据用户id获取历史订单
+    List<Order> getAllOrdersById(Integer id);
 }
