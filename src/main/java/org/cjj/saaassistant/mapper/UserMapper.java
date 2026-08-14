@@ -6,13 +6,13 @@ import org.cjj.saaassistant.pojo.User;
 @Mapper
 public interface UserMapper {
 
-    @Select("select * from user where id = #{id}")
-    User selectUserById(int id);
+    @Select("select * from users where id = #{id}")
+    User selectUserById(Integer id);
 
-    @Insert("insert into user (name, password, email) values (#{name}, #{password}, #{email})")
+    @Insert("insert into users (name, password, email) values (#{name}, #{password}, #{email})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    boolean createUser(User user);
+    boolean insertUser(User user);
 
-    @Update("")
+    @Update("update users set name = #{name}, password = #{password}, email = #{email} where id = #{id}")
     boolean updateUser(User user);
 }

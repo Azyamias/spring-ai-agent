@@ -15,7 +15,7 @@ public class OrderProduct {
     private Integer productId; // 关联商品
     private String productName;
     private Integer productPrice;
-    private Integer productQuantity; // 购买数量
+    private Integer quantity; // 购买数量
     private Date createTime; // 创建时间
     private Date updateTime; // 更新时间
 }

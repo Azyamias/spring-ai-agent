@@ -11,10 +11,10 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
-    private int productId;
-    private String productName;
-    private BigDecimal productPrice;
-    private Integer productStock; // 库存数量
+    private Integer id;
+    private String name;
+    private BigDecimal price;
+    private Integer stock; // 库存数量
     private Date createTime; // 创建时间
     private Date updateTime; // 更新时间
 }

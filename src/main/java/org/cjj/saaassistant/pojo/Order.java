@@ -11,11 +11,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
-    private Integer orderId;
+    private Integer id;
     private Integer userId; // 下单用户id
     private Integer totalPrice; // 订单总价
-    private String orderStatus; // 支付状态
+    private String status; // 支付状态
     private Date createTime; // 创建时间
     private Date updateTime; // 更新时间
-    private List<Integer> productIds;
+    private List<OrderProduct> orderProducts;
 }

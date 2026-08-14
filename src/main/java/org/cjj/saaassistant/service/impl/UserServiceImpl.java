@@ -26,16 +26,16 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean createUser(User user) {
-        if (user == null || user.getUserName() == null || user.getPassword() == null) {
+        if (user == null || user.getName() == null || user.getPassword() == null || user.getEmail() == null) {
             return false;
         }
-        return userMapper.createUser(user);
+        return userMapper.insertUser(user);
     }
 
     @Override
     @Transactional
     public boolean updateUser(User user) {
-        if (user == null || user.getUserId() == null) {
+        if (user == null || user.getId() == null) {
             return false;
         }
         return userMapper.updateUser(user);

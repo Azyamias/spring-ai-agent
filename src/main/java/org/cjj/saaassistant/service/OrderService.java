@@ -7,7 +7,7 @@ import java.util.List;
 public interface OrderService {
 
     // 根据id查找订单
-    Order getOrderById(int id);
+    Order getOrderById(Integer id);
 
     // 创建订单
     boolean createOrder(Order order);
@@ -16,5 +16,5 @@ public interface OrderService {
     boolean updateOrder(Order order);
 
     // 根据用户id获取历史订单
-    List<Order> getAllOrdersById(Integer id);
+    List<Integer> getAllOrdersById(Integer id);
 }

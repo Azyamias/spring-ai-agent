@@ -1,8 +1,6 @@
 package org.cjj.saaassistant.pojo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
@@ -10,8 +8,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private Integer userId;
-    private String userName;
+    private Integer id;
+    private String name;
     private String email;
     private String password;
     private Date createTime; // 创建时间
