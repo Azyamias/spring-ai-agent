@@ -22,9 +22,7 @@ public class AssistantController {
     @GetMapping(value = "/chat", produces = "text/html;charset=utf-8")
     public Flux<String> chat(@RequestParam(value = "msg", defaultValue = "你是谁") String msg) {
         return chatClient
-                .prompt()
-                .user(msg)
-                .tools(new CustomTools())
+                .prompt().user(msg)
                 .stream().content();
     }
 }

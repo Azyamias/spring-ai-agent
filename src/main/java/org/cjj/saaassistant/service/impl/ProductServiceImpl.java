@@ -25,13 +25,13 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.selectProductById(id);
     }
 
-    @Override
+    /*@Override
     public BigDecimal getProductPriceById(Integer id) {
         if (id == null) {
             return null;
         }
         return productMapper.selectProductPriceById(id);
-    }
+    }*/
 
     @Override
     @Transactional

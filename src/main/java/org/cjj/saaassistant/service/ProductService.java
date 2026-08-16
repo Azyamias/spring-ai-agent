@@ -9,8 +9,8 @@ public interface ProductService {
     // 通过id查询商品
     Product getProductById(Integer id);
 
-    // 通过商品id查询价格
-    BigDecimal getProductPriceById(Integer id);
+    /*// 通过商品id查询价格
+    BigDecimal getProductPriceById(Integer id);*/
 
     // 增加商品种类
     boolean addProduct(Product product);

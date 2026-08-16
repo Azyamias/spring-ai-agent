@@ -11,8 +11,8 @@ public interface ProductMapper {
     @Select("select * from products where id = #{id}")
     Product selectProductById(Integer id);
 
-    @Select("select price from products where id = #{id}")
-    BigDecimal selectProductPriceById(Integer id);
+    /*@Select("select price from products where id = #{id}")
+    BigDecimal selectProductPriceById(Integer id);*/
 
     @Insert("insert products (name, price, stock) values (#{name}, #{price}, #{stock})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
