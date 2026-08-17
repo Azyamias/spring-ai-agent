@@ -2,19 +2,16 @@ package org.cjj.saaassistant.service;
 
 import org.cjj.saaassistant.pojo.Product;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 public interface ProductService {
 
-    // 通过id查询商品
+    // 通过商品id或商品名查询商品
     Product getProductById(Integer id);
 
-    /*// 通过商品id查询价格
-    BigDecimal getProductPriceById(Integer id);*/
+    // 商品名称模糊查询
+    List<Product> getProductByKeyword(String keyword);
 
-    // 增加商品种类
-    boolean addProduct(Product product);
-
-    // 更新商品信息
-    boolean updateProduct(Product product);
+    // 查询所有商品
+    List<Product> getAllProducts();
 }

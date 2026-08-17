@@ -2,9 +2,9 @@ package org.cjj.saaassistant.service.impl;
 
 import org.cjj.saaassistant.mapper.OrderMapper;
 import org.cjj.saaassistant.pojo.Order;
+import org.cjj.saaassistant.pojo.User;
 import org.cjj.saaassistant.service.OrderService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,17 +22,23 @@ public class OrderServiceImpl implements OrderService {
         if (id == null) {
             return null;
         }
-        return orderMapper.getOrderById(id);
+        return orderMapper.selectOrderById(id);
     }
 
     @Override
-    public List<Integer> getAllOrdersById(Integer id) {
-        if (id == null || orderMapper.getOrderById(id) == null) {
-            return null;
-        }
-        return orderMapper.getOrdersByUserId(id);
+    public List<Order> getAllOrders() {
+        return orderMapper.selectAllOrders();
     }
 
+    @Override
+    public List<Order> getAllOrdersByUser(User user) {
+        if (user == null || user.getId() == null) {
+            return null;
+        }
+        return orderMapper.selectOrdersByUserId(user.getId());
+    }
+
+    /*
     @Override
     @Transactional
     public boolean createOrder(Order order) {
@@ -49,5 +55,5 @@ public class OrderServiceImpl implements OrderService {
             return false;
         }
         return orderMapper.updateOrder(order);
-    }
+    }*/
 }

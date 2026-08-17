@@ -3,7 +3,7 @@ package org.cjj.saaassistant.mapper;
 import org.apache.ibatis.annotations.*;
 import org.cjj.saaassistant.pojo.Product;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Mapper
 public interface ProductMapper {
@@ -11,8 +11,14 @@ public interface ProductMapper {
     @Select("select * from products where id = #{id}")
     Product selectProductById(Integer id);
 
-    /*@Select("select price from products where id = #{id}")
-    BigDecimal selectProductPriceById(Integer id);*/
+    @Select("select *from products where name = #{name}")
+    Product selectProductByName(String name);
+
+    @Select("SELECT * FROM products WHERE name LIKE CONCAT('%', #{keyword}, '%')")
+    List<Product> selectByNameLike(String keyword);
+
+    @Select("select * from products")
+    List<Product> selectAllProducts();
 
     @Insert("insert products (name, price, stock) values (#{name}, #{price}, #{stock})")
     @Options(useGeneratedKeys = true, keyProperty = "id")

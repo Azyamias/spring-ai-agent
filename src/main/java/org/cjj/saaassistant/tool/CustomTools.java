@@ -8,12 +8,11 @@ import org.cjj.saaassistant.service.OrderService;
 import org.cjj.saaassistant.service.ProductService;
 import org.cjj.saaassistant.service.UserService;
 import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Component
 @Slf4j
@@ -26,34 +25,51 @@ public class CustomTools {
     @Autowired
     private UserService userService;
 
-    @Tool(description = "根据用户id查询用户")
-    public User getUserById(Integer id) {
-        log.info("getUserById");
-        return userService.getUserById(id);
+    @Tool(description = "根据用户id或用户名查询用户，两者至少提供一个，未提供的参数使用null传入")
+    public User getUserByIdOrName(
+            @ToolParam(description = "用户id（正整数）") Integer id,
+            @ToolParam(description = "用户名（字符串）") String name
+    ) {
+        log.info("---getUserByIdOrName id:{}, name:{}---", id, name);
+        return userService.getUserByIdOrUsername(id, name);
     }
 
-    @Tool(description = "根据商品id查询商品")
-    public Product getProductById(Integer id) {
+    @Tool(description = "查询所有用户")
+    public List<User> getAllUsers() {
+        log.info("---getAllUsers---");
+        return userService.getAllUsers();
+    }
+
+    @Tool(description = "根据商品id或商品名查询商品，两者至少提供一个，未提供的参数使用null传入")
+    public Product getProductByIdOrName(
+            @ToolParam(description = "商品id（正整数）") Integer id
+    ) {
+        log.info("---getProductById id:{}---", id);
         return productService.getProductById(id);
     }
 
+    @Tool(description = "通过关键词查询商品，支持模糊查询")
+    public List<Product> getProductByKeyword(String keyword) {
+        log.info("---getProductByKeyword keyword:{}---", keyword);
+        return productService.getProductByKeyword(keyword);
+    }
+
+    @Tool(description = "查询所有商品")
+    public List<Product> getAllProducts() {
+        log.info("---getAllProducts---");
+        return productService.getAllProducts();
+    }
+
     @Tool(description = "根据订单id查询订单")
-    public Order getOrderById(Integer id) {
+    public Order getOrderById(
+            @ToolParam(description = "订单id（正整数）") Integer id) {
+        log.info("---getOrderById id:{}---", id);
         return orderService.getOrderById(id);
     }
 
-    @Tool(description = "根据用户id查询该用户的历史订单")
-    public List<Integer> getProductIdsByOrderId(Integer id) {
-        return orderService.getAllOrdersById(id);
-    }
-
-    @Tool(description = "根据商品id查询商品价格")
-    public BigDecimal getProductPriceById(Integer id) {
-        return productService.getProductById(id).getPrice();
-    }
-
-    @Tool(description = "更新用户信息")
-    public boolean updateUser(User user) {
-        return userService.updateUser(user);
+    @Tool(description = "查询用户历史订单")
+    public List<Order> getAllOrdersByUser(User user) {
+        log.info("---getAllOrdersByUser---");
+        return orderService.getAllOrdersByUser(user);
     }
 }
