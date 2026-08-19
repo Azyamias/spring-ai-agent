@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
 
     <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+          content="width=device-width,initial-scale=1">
 
     <title>电商 AI Agent</title>
 
@@ -21,17 +21,13 @@
 
     <aside class="sidebar">
 
-        <div class="logo">
-
-            电商 AI Agent
-
-        </div>
-
         <button id="newChat">
-
             + 新建会话
-
         </button>
+
+        <div id="conversationList"
+             class="conversation-list">
+        </div>
 
     </aside>
 
@@ -56,9 +52,7 @@
                       placeholder="请输入问题（Enter 发送，Shift+Enter 换行）"></textarea>
 
             <button id="send">
-
                 发送
-
             </button>
 
         </div>

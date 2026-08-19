@@ -1,22 +1,126 @@
-const messages =
-    document.getElementById("messages");
+const messages = document.getElementById("messages");
 
-const input =
-    document.getElementById("input");
+const input = document.getElementById("input");
 
-const sendButton =
-    document.getElementById("send");
+const send = document.getElementById("send");
 
-const newChatButton =
-    document.getElementById("newChat");
+const newChat = document.getElementById("newChat");
 
-let conversationId =
-    crypto.randomUUID();
+const conversationList =
+    document.getElementById("conversationList");
 
-function scrollToBottom() {
+let conversations =
+    JSON.parse(
+        localStorage.getItem("conversations")
+    ) || [];
+
+let currentConversation =
+    null;
+
+function save() {
+
+    localStorage.setItem(
+        "conversations",
+        JSON.stringify(conversations)
+    );
+}
+
+function scrollBottom() {
 
     messages.scrollTop =
         messages.scrollHeight;
+}
+
+function createConversation() {
+
+    const conversation = {
+
+        id: crypto.randomUUID(),
+
+        title: "新会话",
+
+        messages: []
+    };
+
+    conversations.unshift(
+        conversation
+    );
+
+    currentConversation =
+        conversation;
+
+    save();
+
+    renderConversationList();
+
+    renderMessages();
+}
+
+function renderConversationList() {
+
+    conversationList.innerHTML =
+        "";
+
+    conversations.forEach(
+        conversation => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+            item.className =
+                "conversation-item";
+
+            item.textContent =
+                conversation.title;
+
+            item.onclick =
+                () => {
+
+                    currentConversation =
+                        conversation;
+
+                    renderMessages();
+                };
+
+            conversationList
+                .appendChild(
+                    item
+                );
+        }
+    );
+}
+
+function renderMessages() {
+
+    messages.innerHTML = "";
+
+    if (
+        currentConversation.messages.length === 0
+    ) {
+
+        messages.innerHTML =
+            `
+            <div class="welcome">
+                <h1>你好 👋</h1>
+                <p>我是你的 AI 助手</p>
+            </div>
+            `;
+
+        return;
+    }
+
+    currentConversation.messages
+        .forEach(
+            message => {
+
+                addMessage(
+                    message.text,
+                    message.role
+                );
+            }
+        );
 }
 
 function addMessage(
@@ -24,14 +128,18 @@ function addMessage(
     role
 ) {
 
-    const message =
-        document.createElement("div");
+    const wrapper =
+        document.createElement(
+            "div"
+        );
 
-    message.className =
+    wrapper.className =
         `message ${role}`;
 
     const bubble =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     bubble.className =
         "bubble";
@@ -39,15 +147,15 @@ function addMessage(
     bubble.textContent =
         text;
 
-    message.appendChild(
+    wrapper.appendChild(
         bubble
     );
 
     messages.appendChild(
-        message
+        wrapper
     );
 
-    scrollToBottom();
+    scrollBottom();
 
     return bubble;
 }
@@ -63,43 +171,52 @@ async function sendMessage() {
     }
 
     if (
-        document.querySelector(
-            ".welcome"
-        )
+        !currentConversation
     ) {
 
-        document.querySelector(
-            ".welcome"
-        ).remove();
+        createConversation();
     }
 
-    addMessage(
-        text,
-        "user"
-    );
+    if (
+        currentConversation.messages
+            .length === 0
+    ) {
+
+        currentConversation.title =
+            text.substring(
+                0,
+                20
+            );
+
+        renderConversationList();
+    }
+
+    currentConversation.messages
+        .push({
+
+            role: "user",
+
+            text
+        });
+
+    renderMessages();
 
     input.value = "";
 
-    const aiBubble =
+    const bubble =
         addMessage(
-            "正在思考...",
+            "",
             "assistant"
         );
+
+    let answer = "";
 
     try {
 
         const response =
             await fetch(
-                `/chat?msg=${encodeURIComponent(text)}&convId=${conversationId}`
+                `/chat?msg=${encodeURIComponent(text)}&convId=${currentConversation.id}`
             );
-
-        if (!response.ok) {
-
-            aiBubble.textContent =
-                "服务器异常";
-
-            return;
-        }
 
         const reader =
             response.body.getReader();
@@ -107,23 +224,22 @@ async function sendMessage() {
         const decoder =
             new TextDecoder();
 
-        aiBubble.textContent = "";
-
         while (true) {
 
-            const result =
+            const {
+                done,
+                value
+            } =
                 await reader.read();
 
-            if (
-                result.done
-            ) {
+            if (done) {
 
                 break;
             }
 
             let chunk =
                 decoder.decode(
-                    result.value
+                    value
                 );
 
             chunk =
@@ -137,61 +253,66 @@ async function sendMessage() {
                         ""
                     );
 
-            aiBubble.textContent +=
-                chunk;
+            answer += chunk;
 
-            scrollToBottom();
+            bubble.textContent =
+                answer;
+
+            scrollBottom();
         }
 
-    } catch (error) {
+        currentConversation.messages
+            .push({
 
-        console.error(
-            error
-        );
+                role: "assistant",
 
-        aiBubble.textContent =
+                text: answer
+            });
+
+        save();
+
+    } catch {
+
+        bubble.textContent =
             "连接失败";
     }
 }
 
-sendButton.addEventListener(
-    "click",
-    sendMessage
-);
+send.onclick =
+    sendMessage;
 
 input.addEventListener(
     "keydown",
-    function (event) {
+    e => {
 
         if (
-            event.key === "Enter"
+            e.key === "Enter"
             &&
-            !event.shiftKey
+            !e.shiftKey
         ) {
 
-            event.preventDefault();
+            e.preventDefault();
 
             sendMessage();
         }
     }
 );
 
-newChatButton.addEventListener(
-    "click",
-    function () {
+newChat.onclick =
+    createConversation;
 
-        conversationId =
-            crypto.randomUUID();
+if (
+    conversations.length > 0
+) {
 
-        messages.innerHTML =
-            `
-            <div class="welcome">
+    currentConversation =
+        conversations[0];
 
-                <h1>你好 👋</h1>
+    renderConversationList();
 
-                <p>我是你的 AI 助手</p>
+    renderMessages();
 
-            </div>
-            `;
-    }
-);
+} else {
+
+    createConversation();
+}
