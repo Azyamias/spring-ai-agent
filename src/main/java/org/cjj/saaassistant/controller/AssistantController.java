@@ -25,15 +25,19 @@ public class AssistantController {
     @Autowired
     private ChatClient chatClient;
 
-    @GetMapping(value = "/chat", produces = MediaType.TEXT_PLAIN_VALUE)
-    public Flux<String> chat(@RequestParam(value = "msg", defaultValue = "你是谁") String msg, @RequestParam("convId") String convId) {
-        PromptTemplate promptTemplate = new PromptTemplate(template);
-        Prompt prompt = promptTemplate.create(Map.of());
+    @GetMapping(
+            value = "/chat",
+            produces = MediaType.TEXT_EVENT_STREAM_VALUE
+    )
+    public Flux<String> chat(
+            @RequestParam String msg,
+            @RequestParam String convId
+    ) {
+
         return chatClient
-                .prompt(prompt)
+                .prompt()
                 .user(msg)
                 .stream()
-                .content()
-                .map(content -> content.replace("\n", ""));
+                .content();
     }
 }

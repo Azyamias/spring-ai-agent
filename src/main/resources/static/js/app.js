@@ -1,101 +1,197 @@
-const chatBox = document.getElementById("chatBox");
-const messageInput = document.getElementById("messageInput");
-const sendBtn = document.getElementById("sendBtn");
-const newChat = document.getElementById("newChat");
+const messages =
+    document.getElementById("messages");
 
-let convId = crypto.randomUUID();
+const input =
+    document.getElementById("input");
 
-function addMessage(content, type) {
+const sendButton =
+    document.getElementById("send");
 
-    const div = document.createElement("div");
+const newChatButton =
+    document.getElementById("newChat");
 
-    div.className = `message ${type}`;
+let conversationId =
+    crypto.randomUUID();
 
-    div.textContent = content;
+function scrollToBottom() {
 
-    chatBox.appendChild(div);
+    messages.scrollTop =
+        messages.scrollHeight;
+}
 
-    chatBox.scrollTop = chatBox.scrollHeight;
+function addMessage(
+    text,
+    role
+) {
 
-    return div;
+    const message =
+        document.createElement("div");
+
+    message.className =
+        `message ${role}`;
+
+    const bubble =
+        document.createElement("div");
+
+    bubble.className =
+        "bubble";
+
+    bubble.textContent =
+        text;
+
+    message.appendChild(
+        bubble
+    );
+
+    messages.appendChild(
+        message
+    );
+
+    scrollToBottom();
+
+    return bubble;
 }
 
 async function sendMessage() {
 
-    const msg = messageInput.value.trim();
+    const text =
+        input.value.trim();
 
-    if (!msg) {
+    if (!text) {
+
         return;
     }
 
-    addMessage(msg, "user");
+    if (
+        document.querySelector(
+            ".welcome"
+        )
+    ) {
 
-    messageInput.value = "";
+        document.querySelector(
+            ".welcome"
+        ).remove();
+    }
 
-    const aiMessage = addMessage("", "ai");
+    addMessage(
+        text,
+        "user"
+    );
+
+    input.value = "";
+
+    const aiBubble =
+        addMessage(
+            "正在思考...",
+            "assistant"
+        );
 
     try {
 
-        const response = await fetch(
-            `/chat?msg=${encodeURIComponent(msg)}&convId=${convId}`
-        );
+        const response =
+            await fetch(
+                `/chat?msg=${encodeURIComponent(text)}&convId=${conversationId}`
+            );
 
-        const reader = response.body.getReader();
+        if (!response.ok) {
 
-        const decoder = new TextDecoder();
+            aiBubble.textContent =
+                "服务器异常";
+
+            return;
+        }
+
+        const reader =
+            response.body.getReader();
+
+        const decoder =
+            new TextDecoder();
+
+        aiBubble.textContent = "";
 
         while (true) {
 
-            const {done, value} =
+            const result =
                 await reader.read();
 
-            if (done) {
+            if (
+                result.done
+            ) {
+
                 break;
             }
 
-            aiMessage.textContent +=
-                decoder.decode(value);
+            let chunk =
+                decoder.decode(
+                    result.value
+                );
 
-            chatBox.scrollTop =
-                chatBox.scrollHeight;
+            chunk =
+                chunk
+                    .replaceAll(
+                        "data:",
+                        ""
+                    )
+                    .replaceAll(
+                        "\n",
+                        ""
+                    );
+
+            aiBubble.textContent +=
+                chunk;
+
+            scrollToBottom();
         }
 
-    } catch (e) {
+    } catch (error) {
 
-        aiMessage.textContent =
-            "服务器连接失败";
+        console.error(
+            error
+        );
+
+        aiBubble.textContent =
+            "连接失败";
     }
 }
 
-sendBtn.addEventListener(
+sendButton.addEventListener(
     "click",
     sendMessage
 );
 
-messageInput.addEventListener(
+input.addEventListener(
     "keydown",
-    function (e) {
+    function (event) {
 
-        if (e.key === "Enter" && !e.shiftKey) {
+        if (
+            event.key === "Enter"
+            &&
+            !event.shiftKey
+        ) {
 
-            e.preventDefault();
+            event.preventDefault();
 
             sendMessage();
         }
     }
 );
 
-newChat.addEventListener(
+newChatButton.addEventListener(
     "click",
     function () {
 
-        convId = crypto.randomUUID();
+        conversationId =
+            crypto.randomUUID();
 
-        chatBox.innerHTML = "";
+        messages.innerHTML =
+            `
+            <div class="welcome">
 
-        addMessage(
-            "你好，我是 AI 助手，请开始聊天。",
-            "ai"
-        );
+                <h1>你好 👋</h1>
+
+                <p>我是你的 AI 助手</p>
+
+            </div>
+            `;
     }
 );
