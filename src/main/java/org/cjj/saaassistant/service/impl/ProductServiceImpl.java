@@ -4,8 +4,8 @@ import org.cjj.saaassistant.mapper.ProductMapper;
 import org.cjj.saaassistant.pojo.Product;
 import org.cjj.saaassistant.service.ProductService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.selectAllProducts();
     }
 
-    /*@Override
+    @Override
     @Transactional
     public boolean addProduct(Product product) {
         if (product == null || product.getName() == null || product.getPrice() == null || product.getStock() == null) {
@@ -51,5 +51,14 @@ public class ProductServiceImpl implements ProductService {
             return false;
         }
         return productMapper.updateProduct(product);
-    }*/
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteProduct(Integer id) {
+        if (id == null) {
+            return false;
+        }
+        return productMapper.deleteProductById(id);
+    }
 }

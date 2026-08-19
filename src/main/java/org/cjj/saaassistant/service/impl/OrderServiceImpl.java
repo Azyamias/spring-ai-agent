@@ -5,6 +5,7 @@ import org.cjj.saaassistant.pojo.Order;
 import org.cjj.saaassistant.pojo.User;
 import org.cjj.saaassistant.service.OrderService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,15 +39,14 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.selectOrdersByUserId(user.getId());
     }
 
-    /*
-    @Override
+    /*@Override
     @Transactional
     public boolean createOrder(Order order) {
         if (order == null || order.getId() == null || order.getUserId() == null || order.getTotalPrice() == null || order.getStatus() == null) {
             return false;
         }
         return orderMapper.insertOrder(order);
-    }
+    }*/
 
     @Override
     @Transactional
@@ -55,5 +55,5 @@ public class OrderServiceImpl implements OrderService {
             return false;
         }
         return orderMapper.updateOrder(order);
-    }*/
+    }
 }

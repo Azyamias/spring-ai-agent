@@ -23,4 +23,7 @@ public interface UserMapper {
 
     @Update("update users set name = #{name}, password = #{password}, email = #{email} where id = #{id}")
     boolean updateUser(User user);
+
+    @Delete("delete from users where id = #{id}")
+    boolean deleteUserById(Integer id);
 }

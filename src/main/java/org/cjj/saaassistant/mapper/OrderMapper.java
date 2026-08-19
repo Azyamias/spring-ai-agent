@@ -1,7 +1,6 @@
 package org.cjj.saaassistant.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.mapping.FetchType;
 import org.cjj.saaassistant.pojo.Order;
 
 import java.util.List;
@@ -33,4 +32,7 @@ public interface OrderMapper {
 
     @Update("update orders set user_id = #{user_id}, total_price = #{total_price}, status = #{status}")
     boolean updateOrder(Order order);
+
+    @Delete("delete from orders where id = #{id}")
+    boolean deleteOrderById(Integer id);
 }

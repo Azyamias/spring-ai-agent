@@ -14,4 +14,13 @@ public interface ProductService {
 
     // 查询所有商品
     List<Product> getAllProducts();
+
+    // 增加商品
+    boolean addProduct(Product product);
+
+    // 更新商品信息
+    boolean updateProduct(Product product);
+
+    // 删除商品
+    boolean deleteProduct(Integer id);
 }

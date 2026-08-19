@@ -15,4 +15,17 @@ public interface OrderService {
 
     // 获取用户历史订单
     List<Order> getAllOrdersByUser(User user);
+
+    /*
+    // 增加订单
+    boolean createOrder(Order order);
+    */
+
+    // 更新订单信息
+    boolean updateOrder(Order order);
+
+    /*
+    // 删除订单
+    boolean deleteOrderById(Integer id);
+     */
 }

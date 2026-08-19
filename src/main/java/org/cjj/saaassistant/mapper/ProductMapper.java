@@ -11,9 +11,6 @@ public interface ProductMapper {
     @Select("select * from products where id = #{id}")
     Product selectProductById(Integer id);
 
-    @Select("select *from products where name = #{name}")
-    Product selectProductByName(String name);
-
     @Select("SELECT * FROM products WHERE name LIKE CONCAT('%', #{keyword}, '%')")
     List<Product> selectByNameLike(String keyword);
 
@@ -26,4 +23,7 @@ public interface ProductMapper {
 
     @Update("update products set name = #{name}, price = #{price}, stock = #{stock} where id = #{id}")
     boolean updateProduct(Product product);
+
+    @Delete("delete from products where id = #{id}")
+    boolean deleteProductById(Integer id);
 }

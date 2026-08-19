@@ -4,6 +4,7 @@ import org.cjj.saaassistant.mapper.UserMapper;
 import org.cjj.saaassistant.pojo.User;
 import org.cjj.saaassistant.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectAllUsers();
     }
 
-    /*@Override
+    @Override
     @Transactional
     public boolean createUser(User user) {
         if (user == null || user.getName() == null || user.getPassword() == null || user.getEmail() == null) {
@@ -48,5 +49,14 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         return userMapper.updateUser(user);
-    }*/
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteUser(Integer id) {
+        if (id == null) {
+            return false;
+        }
+        return userMapper.deleteUserById(id);
+    }
 }

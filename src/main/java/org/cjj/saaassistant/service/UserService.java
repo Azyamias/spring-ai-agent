@@ -11,4 +11,13 @@ public interface UserService {
 
     // 查询所有用户
     List<User> getAllUsers();
+
+    // 创建用户
+    boolean createUser(User user);
+
+    // 更新用户信息
+    boolean updateUser(User user);
+
+    // 删除用户
+    boolean deleteUser(Integer id);
 }
