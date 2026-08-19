@@ -3,6 +3,7 @@ package org.cjj.saaassistant.service.impl;
 import org.cjj.saaassistant.mapper.ProductMapper;
 import org.cjj.saaassistant.pojo.Product;
 import org.cjj.saaassistant.service.ProductService;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +13,14 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductMapper productMapper;
+    private final JdbcTemplate jdbcTemplate;
 
-    public ProductServiceImpl(ProductMapper productMapper) {
+    public ProductServiceImpl(
+            ProductMapper productMapper,
+            JdbcTemplate jdbcTemplate
+    ) {
         this.productMapper = productMapper;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -38,9 +44,22 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public boolean addProduct(Product product) {
-        if (product == null || product.getName() == null || product.getPrice() == null || product.getStock() == null) {
+
+        System.out.println("========================================");
+        System.out.println("当前数据库: "
+                + jdbcTemplate.queryForObject(
+                "SELECT DATABASE()",
+                String.class
+        ));
+        System.out.println("========================================");
+
+        if (product == null
+                || product.getName() == null
+                || product.getPrice() == null
+                || product.getStock() == null) {
             return false;
         }
+
         return productMapper.insertProduct(product);
     }
 
