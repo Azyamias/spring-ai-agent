@@ -13,6 +13,8 @@ import reactor.core.publisher.Flux;
 
 import java.util.Map;
 
+import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
+
 @RestController
 public class AssistantController {
 
@@ -23,12 +25,13 @@ public class AssistantController {
     private ChatClient chatClient;
 
     @GetMapping(value = "/chat", produces = "text/html;charset=utf-8")
-    public Flux<String> chat(@RequestParam(value = "msg", defaultValue = "你是谁") String msg) {
+    public Flux<String> chat(@RequestParam(value = "msg", defaultValue = "你是谁") String msg, @RequestParam("convId") String convId) {
         PromptTemplate promptTemplate = new PromptTemplate(template);
         Prompt prompt = promptTemplate.create(Map.of());
         return chatClient
                 .prompt(prompt)
                 .user(msg)
+                .advisors(advisorSpec -> advisorSpec.param(CONVERSATION_ID, convId))
                 .stream().content();
     }
 }
