@@ -10,11 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
-import org.springframework.http.MediaType;
 
 import java.util.Map;
-
-import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
 
 @RestController
 public class AssistantController {
@@ -27,15 +24,13 @@ public class AssistantController {
 
     @GetMapping(
             value = "/chat",
-            produces = MediaType.TEXT_EVENT_STREAM_VALUE
+            produces = "text/html;charset=utf-8"
     )
-    public Flux<String> chat(
-            @RequestParam String msg,
-            @RequestParam String convId
-    ) {
-
+    public Flux<String> chat(@RequestParam(value = "msg", defaultValue = "你好") String msg) {
+        PromptTemplate promptTemplate = new PromptTemplate(template);
+        Prompt prompt = promptTemplate.create(Map.of());
         return chatClient
-                .prompt()
+                .prompt(prompt)
                 .user(msg)
                 .stream()
                 .content();
