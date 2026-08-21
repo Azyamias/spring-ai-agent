@@ -110,8 +110,8 @@ public class CustomTools {
     }
 
     @Tool(description = "根据用户id删除用户")
-    public boolean deleteOrderById(Integer id) {
-        log.info("---deleteOrderById---");
+    public boolean deleteUserById(Integer id) {
+        log.info("---deleteUserById---");
         return userService.deleteUser(id);
     }
 

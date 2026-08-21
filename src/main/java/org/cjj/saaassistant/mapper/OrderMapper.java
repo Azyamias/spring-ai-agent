@@ -21,16 +21,16 @@ public interface OrderMapper {
     })
     Order selectOrderById(Integer id);
 
-    @Select("select * from orders where user_id = #{user_id} order by create_time DESC")
+    @Select("select * from orders where user_id = #{userId} order by create_time DESC")
     List<Order> selectOrdersByUserId(Integer userId);
 
     @Select("select * from orders")
     List<Order> selectAllOrders();
 
-    @Insert("insert into orders (user_id, total_price, status) values (#{user_id}, #{total_price}, #{status})")
+    @Insert("insert into orders (user_id, total_price, status) values (#{userId}, #{totalPrice}, #{status})")
     boolean insertOrder(Order order);
 
-    @Update("update orders set user_id = #{user_id}, total_price = #{total_price}, status = #{status}")
+    @Update("update orders set user_id = #{userId}, total_price = #{totalPrice}, status = #{status} where id = #{id")
     boolean updateOrder(Order order);
 
     @Delete("delete from orders where id = #{id}")

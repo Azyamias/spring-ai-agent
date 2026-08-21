@@ -17,7 +17,7 @@ public interface ProductMapper {
     @Select("select * from products")
     List<Product> selectAllProducts();
 
-    @Insert("insert products (name, price, stock) values (#{name}, #{price}, #{stock})")
+    @Insert("insert into products (name, price, stock) values (#{name}, #{price}, #{stock})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     boolean insertProduct(Product product);
 
