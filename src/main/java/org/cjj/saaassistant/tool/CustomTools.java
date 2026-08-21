@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.cjj.saaassistant.pojo.Order;
 import org.cjj.saaassistant.pojo.Product;
 import org.cjj.saaassistant.pojo.User;
+import org.cjj.saaassistant.pojo.CreateOrderRequest;
 import org.cjj.saaassistant.service.OrderService;
 import org.cjj.saaassistant.service.ProductService;
 import org.cjj.saaassistant.service.UserService;
@@ -60,9 +61,10 @@ public class CustomTools {
         return productService.getAllProducts();
     }
 
-    @Tool(description = "根据订单id查询订单")
+    @Tool(description = "根据订单id查询订单详情")
     public Order getOrderById(
-            @ToolParam(description = "订单id（正整数）") Integer id) {
+            @ToolParam(description = "订单id（正整数）")
+            Integer id) {
         log.info("---getOrderById id:{}---", id);
         return orderService.getOrderById(id);
     }
@@ -73,10 +75,36 @@ public class CustomTools {
         return orderService.getAllOrders();
     }
 
-    @Tool(description = "查询用户历史订单")
+    @Tool(description = "根据用户信息查询该用户的所有历史订单")
     public List<Order> getAllOrdersByUser(User user) {
         log.info("---getAllOrdersByUser---");
         return orderService.getAllOrdersByUser(user);
+    }
+
+    @Tool(description = "创建订单。需要提供用户id和商品列表，系统会自动查询商品真实价格、检查库存、计算订单总价、创建订单商品并扣减库存")
+    public Order createOrder(CreateOrderRequest request) {
+
+        log.info("---createOrder---");
+
+        return orderService.createOrder(request);
+    }
+
+    @Tool(description = "更新订单支付状态。订单状态支持UNPAID未支付、PAID已支付、CANCELLED已取消")
+    public boolean updateOrders(Order order) {
+
+        log.info("---updateOrders---");
+
+        return orderService.updateOrder(order);
+    }
+
+    @Tool(description = "根据订单id删除订单。未支付订单可以删除，删除时会自动恢复商品库存；已支付订单不能直接删除")
+    public boolean deleteOrderById(
+            @ToolParam(description = "订单id（正整数）")
+            Integer id) {
+
+        log.info("---deleteOrderById id:{}---", id);
+
+        return orderService.deleteOrderById(id);
     }
 
     @Tool(description = "根据用户提供的信息创建新用户，可填入参数有用户名（必填），邮箱（必填）和密码（必填）")
@@ -103,15 +131,10 @@ public class CustomTools {
         return productService.updateProduct(product);
     }
 
-    @Tool(description = "根据用户提供的信息更新订单信息")
-    public boolean updateOrders(Order order) {
-        log.info("---updateOrders---");
-        return orderService.updateOrder(order);
-    }
 
     @Tool(description = "根据用户id删除用户")
-    public boolean deleteOrderById(Integer id) {
-        log.info("---deleteOrderById---");
+    public boolean deleteUserById(Integer id) {
+        log.info("---deleteUserById---");
         return userService.deleteUser(id);
     }
 

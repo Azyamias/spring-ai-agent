@@ -7,7 +7,6 @@ import java.util.List;
 
 @Mapper
 public interface OrderMapper {
-
     @Select("SELECT * FROM orders WHERE id = #{id}")
     @Results(id = "orderResultMap", value = {
             @Result(property = "id", column = "id"),
@@ -16,23 +15,54 @@ public interface OrderMapper {
             @Result(property = "status", column = "status"),
             @Result(property = "createTime", column = "create_time"),
             @Result(property = "updateTime", column = "update_time"),
-            @Result(property = "orderProducts", column = "id",
-                    many = @Many(select = "org.cjj.saaassistant.mapper.OrderProductMapper.selectByOrderId"))
+            @Result(
+                    property = "orderProducts",
+                    column = "id",
+                    many = @Many(
+                            select = "org.cjj.saaassistant.mapper.OrderProductMapper.selectByOrderId"
+                    )
+            )
     })
     Order selectOrderById(Integer id);
 
-    @Select("select * from orders where user_id = #{user_id} order by create_time DESC")
-    List<Order> selectOrdersByUserId(Integer userId);
-
-    @Select("select * from orders")
+    @Select("""
+            SELECT *
+            FROM orders
+            ORDER BY create_time DESC
+            """)
     List<Order> selectAllOrders();
 
-    @Insert("insert into orders (user_id, total_price, status) values (#{user_id}, #{total_price}, #{status})")
+    @Select("""
+            SELECT *
+            FROM orders
+            WHERE user_id = #{userId}
+            ORDER BY create_time DESC
+            """)
+    List<Order> selectOrdersByUserId(Integer userId);
+
+    @Insert("""
+            INSERT INTO orders
+            (user_id, total_price, status)
+            VALUES
+            (#{userId}, #{totalPrice}, #{status})
+            """)
+    @Options(
+            useGeneratedKeys = true,
+            keyProperty = "id",
+            keyColumn = "id"
+    )
     boolean insertOrder(Order order);
 
-    @Update("update orders set user_id = #{user_id}, total_price = #{total_price}, status = #{status}")
+    @Update("""
+            UPDATE orders
+            SET status = #{status}
+            WHERE id = #{id}
+            """)
     boolean updateOrder(Order order);
 
-    @Delete("delete from orders where id = #{id}")
+    @Delete("""
+            DELETE FROM orders
+            WHERE id = #{id}
+            """)
     boolean deleteOrderById(Integer id);
 }

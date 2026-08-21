@@ -17,7 +17,7 @@ public interface ProductMapper {
     @Select("select * from products")
     List<Product> selectAllProducts();
 
-    @Insert("insert products (name, price, stock) values (#{name}, #{price}, #{stock})")
+    @Insert("insert into products (name, price, stock) values (#{name}, #{price}, #{stock})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     boolean insertProduct(Product product);
 
@@ -26,4 +26,25 @@ public interface ProductMapper {
 
     @Delete("delete from products where id = #{id}")
     boolean deleteProductById(Integer id);
+
+    @Update("""
+            update products
+            set stock = stock - #{quantity}
+            where id = #{productId}
+              and stock >= #{quantity}
+            """)
+    boolean decreaseStock(
+            @Param("productId") Integer productId,
+            @Param("quantity") Integer quantity
+    );
+
+    @Update("""
+        UPDATE products
+        SET stock = stock + #{quantity}
+        WHERE id = #{productId}
+        """)
+    boolean increaseStock(
+            @Param("productId") Integer productId,
+            @Param("quantity") Integer quantity
+    );
 }
