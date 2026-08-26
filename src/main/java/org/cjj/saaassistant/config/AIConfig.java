@@ -26,7 +26,7 @@ public class AIConfig {
     @Value("${spring.data.redis.port:6379}")
     private int port;
 
-    private final String MODEL = "qwen3.7-max";
+    private final String MODEL = "qwen-plus";
 
     @Bean
     public DashScopeApi dashScopeApi() {
@@ -53,7 +53,7 @@ public class AIConfig {
     @Bean
     public ChatClient chatClient(DashScopeApi dashScopeApi, CustomTools customTools, MessageChatMemoryAdvisor memoryAdvisor) {
         ChatModel model = DashScopeChatModel.builder().dashScopeApi(dashScopeApi)
-                .defaultOptions(DashScopeChatOptions.builder().withModel(MODEL).build()).build();
+                .defaultOptions(DashScopeChatOptions.builder().withModel(MODEL).withMaxToken(3000) .build()).build();
         return ChatClient.builder(model)
                 .defaultTools(customTools)
                 .defaultAdvisors(memoryAdvisor)
